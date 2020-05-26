@@ -17,4 +17,7 @@ public interface JogadorDAO extends JpaRepository<Jogador, Integer>{
 	@Transactional(readOnly = true)
 	@Query("Select distinct obj from Jogador obj where obj.login like %:login%")
 	Page<Jogador> findAllByLogin(@Param("login") String login, Pageable pageRequest);
+	
+	@Transactional(readOnly = true)
+	Jogador findByLogin(String login);
 }
