@@ -47,7 +47,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	        return auth;
 		}
 		catch (IOException e) {
-			System.out.println("Erro no JWTAuthenticationFilter linha 49");
 			throw new RuntimeException(e);
 		}
 	}
@@ -61,6 +60,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		String username = ((UserSS) auth.getPrincipal()).getUsername();
         String token = jwtUtil.generateToken(username);
         res.addHeader("Authorization", "Bearer " + token);
+        res.setContentType("application/json");
+        res.getWriter().append(user(((UserSS) auth.getPrincipal())));
+	}
+	
+	private String user(UserSS user) {
+		String tipo = (user.getAuthorities().toString().contains("JOGADOR") ? "Jogador" : "Olheiro");
+		return "{\"id\": " + user.getId()+","
+				+"\"tipo\": " + tipo +"}";
 	}
 
 	private class JWTAuthenticationFailureHandler implements AuthenticationFailureHandler {
