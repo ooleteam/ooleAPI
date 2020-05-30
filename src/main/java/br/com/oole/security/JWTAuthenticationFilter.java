@@ -67,7 +67,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	private String user(UserSS user) {
 		String tipo = (user.getAuthorities().toString().contains("JOGADOR") ? "Jogador" : "Olheiro");
 		return "{\"id\": " + user.getId()+","
-				+"\"tipo\": " + tipo +"}";
+				+"\"tipo\": " + "\"" + tipo + "\"" +"}";
 	}
 
 	private class JWTAuthenticationFailureHandler implements AuthenticationFailureHandler {
