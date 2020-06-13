@@ -42,9 +42,6 @@ public class JogadorService {
 	private ImageService imageService;
 	
 	@Autowired
-	private VideoService videoService;
-	
-	@Autowired
 	private BCryptPasswordEncoder bc;
 	
 	@Value("${img.prefix.client.profile}")
@@ -110,25 +107,6 @@ public class JogadorService {
 		dao.saveAll(Arrays.asList(seguido, seguidor));
 		
 		return seguido;
-	}
-	
-	public URI uploadVideos(MultipartFile file, Integer id, String title, String desc){
-		Jogador newObj = find(id);
-		Date data = new Date();
-		String fileName = title + ".mp4";
-		
-		URL url = s3Service.uploadVideo(videoService.getInputStream(file, "mp4"), fileName, id);
-		Video video = new Video(null,title,desc,url.toString(), data, 0 , 0, newObj);
-		
-		newObj.getVideos().add(video);
-		
-		videoService.insert(video);
-		videoService.deleteFromlLocal(file.getOriginalFilename());
-		try {
-			return url.toURI();
-		} catch (URISyntaxException e) {
-			throw new FileException("Erro de IO: " + e.getMessage());
-		}
 	}
 	
 	public URI uploadProfilePicture(MultipartFile multipartFile, Integer id) {

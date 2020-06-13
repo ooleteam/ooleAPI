@@ -39,7 +39,6 @@ public class JogadorResource {
 	
 	@Autowired
 	private JogadorService jogadorService;
-
 	
 	@GetMapping
 	public ResponseEntity<List<Jogador>> findAll() {
@@ -49,7 +48,6 @@ public class JogadorResource {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Jogador> find(@PathVariable Integer id) {
-		System.out.println(id);
 		Jogador obj = jogadorService.find(id);
 		return ResponseEntity.ok().body(obj);
 	}
@@ -113,16 +111,6 @@ public class JogadorResource {
 	@PutMapping(value="/{id}/fotoperfil")
 	public ResponseEntity<Void> uploadProfilePicture(@RequestParam(name="file") MultipartFile file, @PathVariable(name ="id") Integer id) {
 		URI uri = jogadorService.uploadProfilePicture(file, id);
-		return ResponseEntity.created(uri).build();
-	}
-	
-	@PutMapping(value="/{id}/videos")
-	public ResponseEntity<Void> uploadVideo(
-			@RequestParam(name="file") MultipartFile file, 
-			@RequestParam(name="title") String title,
-			@RequestParam(name="desc") String desc,
-			@PathVariable(name ="id") Integer id) {
-		URI uri = jogadorService.uploadVideos(file, id, title, desc);
 		return ResponseEntity.created(uri).build();
 	}
 }

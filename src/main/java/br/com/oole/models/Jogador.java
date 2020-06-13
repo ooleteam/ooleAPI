@@ -76,7 +76,7 @@ public class Jogador implements Serializable{
 	
 	@ManyToMany
 	@JsonIgnore
-	@JoinTable(name = "JOGADOR_SEGUIDOR",
+	@JoinTable(name = "JOGADOR_SEGUINDO",
 			joinColumns = @JoinColumn(name = "jogador_id"),
 			inverseJoinColumns = @JoinColumn(name = "seguidor_id"))
 	private Set<Jogador> jogadoresSeguindo = new HashSet<Jogador>();
@@ -86,6 +86,7 @@ public class Jogador implements Serializable{
 	private Set<Jogador> jogadoresSeguidores = new HashSet<Jogador>();
 	
 	@OneToMany(mappedBy = "jogador")
+	@JsonIgnore
 	private List<Video> videos = new ArrayList<Video>();
 
 	public Jogador(Integer id, String nome, String dataNascimento, String cpf, String sexo, String posicao,
