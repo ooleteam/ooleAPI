@@ -55,7 +55,7 @@ public class Video implements Serializable{
 	private Set<Olheiro> olheiroDislike = new HashSet<Olheiro>();
 	
 	@ManyToOne
-	@JsonIgnore
+//	@JsonIgnore
 	private Jogador jogador;
 	
 
