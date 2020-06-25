@@ -176,7 +176,7 @@ public class OlheiroService {
 	public Olheiro fromDTO(NewOlheiroDTO objDto){
 		String senha = bc.encode(objDto.getSenha());
 		return new Olheiro(null,objDto.getNome(), objDto.getDataNascimento(), objDto.getCpf(), 
-							objDto.getSexo(), '@'+objDto.getLogin(), senha, objDto.getEmail(), 
+							objDto.getSexo(), objDto.getLogin(), senha, objDto.getEmail(), 
 							objDto.getTelefone(), objDto.getNacionalidade(),objDto.getCep(),
 							objDto.getBairro(),objDto.getCidade(),objDto.getEstado(),
 							objDto.getEndereco());

@@ -46,6 +46,7 @@ public class VideoService {
 	private OlheiroService olheiroService;
 	
 	public Video insert(Video obj) {
+//		dao.insert(obj);
 		return dao.save(obj);
 	}
 	
@@ -63,7 +64,22 @@ public class VideoService {
 		return dao.findByJogador(jogadorId);
 	}
 	
-	public List<Video> feedByJogador(Integer idUser,Integer page, Integer linesPerPage, String orderBy, String direction){		
+	public List<Video> feedByJogador(Integer idUser,Integer page, Integer linesPerPage, String orderBy, String direction){
+		UserSS user = UserService.authenticated();
+		
+		if(user.hasRole(Perfil.OLHEIRO)) {
+			Olheiro olheiro = olheiroService.find(idUser);
+			PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+			
+			List<Video> aux = new ArrayList<Video>();
+			for (Jogador j : olheiro.getJogadores()) {
+				aux.addAll((dao.feed(j.getId())));
+			}
+			
+			
+			return aux;
+		}
+		
 		Jogador jogador = jogadorService.find(idUser);
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		
@@ -74,6 +90,7 @@ public class VideoService {
 		
 		
 		return aux;
+		
 //		List<Video> feedVideos
 //		for (Jogador seguindo : jogador.getJogadoresSeguindo()) {
 //			seguindo.getVideos();
@@ -82,75 +99,80 @@ public class VideoService {
 	}
 	
 	public void likeVideo(Integer idVideo, Integer idUser) {
-		UserSS user = UserService.authenticated();
-		if (user==null || !user.hasRole(Perfil.JOGADOR) && !idUser.equals(user.getId())) {
-			throw new AuthorizationException("Acesso negado");
-		}
 		
 		Video video = find(idVideo);
 		
-		if(user.getAuthorities().toString().contains("JOGADOR")) {
-			Jogador jogador = jogadorService.find(idUser);
-			
-			if(video.getJogadorLike().contains(jogador)) {
-				video.getJogadorLike().remove(jogador);
-			}else {
-				video.getJogadorLike().add(jogador);
-				if(video.getJogadorDislike().contains(jogador)) {
-					video.getJogadorDislike().remove(jogador);
-				}
-			}
-		}else{
-			Olheiro olheiro = olheiroService.find(idUser);
-			if(video.getOlheiroLike().contains(olheiro)) {
-				video.getOlheiroLike().remove(olheiro);
-			}else {
-				video.getOlheiroLike().add(olheiro);
-				if(video.getOlheiroDislike().contains(olheiro)) {
-					video.getOlheiroDislike().remove(olheiro);
-				}
-			}
+		Olheiro olheiro = olheiroService.find(idUser);
+		if(video.getOlheirosLikes().contains(olheiro)) {
+			video.getOlheirosLikes().remove(olheiro);
+			olheiro.getVideosLiked().remove(video);
+		}else {
+			video.getOlheirosLikes().add(olheiro);
+			olheiro.getVideosLiked().add(video);
 		}
+		
+//		if(user.getAuthorities().toString().contains("JOGADOR")) {
+//			Jogador jogador = jogadorService.find(idUser);
+//			
+//			if(video.getJogadorLike().contains(jogador)) {
+//				video.getJogadorLike().remove(jogador);
+//			}else {
+//				video.getJogadorLike().add(jogador);
+//				if(video.getJogadorDislike().contains(jogador)) {
+//					video.getJogadorDislike().remove(jogador);
+//				}
+//			}
+//		}else{
+//			Olheiro olheiro = olheiroService.find(idUser);
+//			if(video.getOlheiroLike().contains(olheiro)) {
+//				video.getOlheiroLike().remove(olheiro);
+//			}else {
+//				video.getOlheiroLike().add(olheiro);
+//				if(video.getOlheiroDislike().contains(olheiro)) {
+//					video.getOlheiroDislike().remove(olheiro);
+//				}
+//			}
+//		}
 		
 		dao.save(video);
 		
 	}
 	
-	public void dislikeVideo(Integer idVideo, Integer idUser) {
-		
-		UserSS user = UserService.authenticated();
-		if (user==null || !user.hasRole(Perfil.JOGADOR) && !idUser.equals(user.getId())) {
-			throw new AuthorizationException("Acesso negado");
-		}
-		
-		Video video = find(idVideo);
-		
-		if(user.getAuthorities().toString().contains("JOGADOR")) {
-			Jogador jogador = jogadorService.find(idUser);
-			
-			if(video.getJogadorDislike().contains(jogador)) {
-				video.getJogadorDislike().remove(jogador);
-			}else {
-				video.getJogadorDislike().add(jogador);
-				if(video.getJogadorLike().contains(jogador)) {
-					video.getJogadorLike().remove(jogador);
-				}
-			}
-		}else{
-			Olheiro olheiro = olheiroService.find(idUser);
-			if(video.getOlheiroDislike().contains(olheiro)) {
-				video.getOlheiroDislike().remove(olheiro);
-			}else {
-				video.getOlheiroDislike().add(olheiro);
-				if(video.getOlheiroLike().contains(olheiro)) {
-					video.getOlheiroLike().remove(olheiro);
-				}
-			}
-		}
-		
-		dao.save(video);
-		
-	}
+//	public void dislikeVideo(Integer idVideo, Integer idUser) {
+//		
+//		UserSS user = UserService.authenticated();
+//		if (user==null || !user.hasRole(Perfil.JOGADOR) && !idUser.equals(user.getId())) {
+//			throw new AuthorizationException("Acesso negado");
+//		}
+//		
+//		Video video = find(idVideo);
+//		
+//		if(user.getAuthorities().toString().contains("JOGADOR")) {
+//			Jogador jogador = jogadorService.find(idUser);
+//			
+//			if(video.getJogadorDislike().contains(jogador)) {
+//				video.getJogadorDislike().remove(jogador);
+//			}else {
+//				video.getJogadorDislike().add(jogador);
+//				if(video.getJogadorLike().contains(jogador)) {
+//					video.getJogadorLike().remove(jogador);
+//				}
+//			}
+//		}else{
+//			Olheiro olheiro = olheiroService.find(idUser);
+//			if(video.getOlheiroDislike().contains(olheiro)) {
+//				video.getOlheiroDislike().remove(olheiro);
+//			}else {
+//				video.getOlheiroDislike().add(olheiro);
+//				if(video.getOlheiroLike().contains(olheiro)) {
+//					video.getOlheiroLike().remove(olheiro);
+//				}
+//			}
+//		}
+//		
+//		dao.save(video);
+//		
+//	}
 	
 	public URI uploadVideos(MultipartFile file, Integer id, String title, String desc){
 		UserSS user = UserService.authenticated();
@@ -160,15 +182,16 @@ public class VideoService {
 		
 		Jogador newObj = jogadorService.find(id);
 		Date data = new Date();
-		String fileName = title + ".mp4";
-		
+		String fileName = title.trim() + ".mp4";
+		System.out.println(fileName);
 		URL url = s3Service.uploadVideo(getInputStream(file, "mp4"), fileName, id);
 		
 		Video video = new Video(null,title,desc,url.toString(), data, newObj);
-		
-		newObj.getVideos().add(video);
-		
+		System.out.println(video.getTitle());
+//		newObj.getVideos().add(video);
+		System.out.println("Add to jogadador");
 		insert(video);
+		System.out.println("Foisasasasjbjbhjsabhbjdshadshsdbhjhjbasdsadsajbdjasdjasjdadbs");
 		deleteFromlLocal(file.getOriginalFilename());
 		try {
 			return url.toURI();

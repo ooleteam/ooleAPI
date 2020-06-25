@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.oole.dto.JogadorDTO;
 import br.com.oole.dto.NewOlheiroDTO;
 import br.com.oole.dto.OlheiroDTO;
+import br.com.oole.models.Jogador;
 import br.com.oole.models.Olheiro;
 import br.com.oole.services.OlheiroService;
 

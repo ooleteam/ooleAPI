@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -71,6 +72,11 @@ public class Olheiro implements Serializable{
 	@JsonIgnore
 	private Set<Jogador> jogadores = new HashSet<Jogador>();
 	
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JsonIgnore
+	@JoinTable(name = "olheirosLikes")
+	private Set<Video> videosLiked = new HashSet<Video>();
+	
 	@ManyToMany
 	@JsonIgnore
 	@JoinTable(name = "OLHEIRO_SEGUINDO",
@@ -133,7 +139,7 @@ public class Olheiro implements Serializable{
 	
 	
 	public static OlheiroDTO toDTO(Olheiro ol) {
-		return new OlheiroDTO(ol.getId(), ol.getUrlFotoPerfil(),ol.getNome(),ol.getDataNascimento(),ol.getSexo(),ol.getLogin(),ol.getEmail(),ol.getTelefone(), ol.getNacionalidade(),ol.getCep(),ol.getBairro(),ol.getCidade(),ol.getEndereco(),ol.getEstado());
+		return new OlheiroDTO(ol.getId(), ol.getUrlFotoPerfil(), ol.getNome(), ol.getDataNascimento(), ol.getSexo(), ol.getLogin(), ol.getEmail(), ol.getTelefone(), ol.getNacionalidade(), ol.getCep(), ol.getBairro(), ol.getCidade(), ol.getEndereco(), ol.getEstado());
 	}
 
 }

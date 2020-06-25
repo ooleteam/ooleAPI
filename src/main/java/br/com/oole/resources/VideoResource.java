@@ -72,13 +72,13 @@ public class VideoResource {
 		return ResponseEntity.noContent().build();
 	}
 	
-	@PutMapping(value="/dislike")
-	public ResponseEntity<Void> dislike(
-			@RequestParam(name="idUser") Integer idUser, 
-			@RequestParam(name="idVideo") Integer idVideo) {
-		videoService.dislikeVideo(idVideo, idUser);
-		return ResponseEntity.noContent().build();
-	}
+//	@PutMapping(value="/dislike")
+//	public ResponseEntity<Void> dislike(
+//			@RequestParam(name="idUser") Integer idUser, 
+//			@RequestParam(name="idVideo") Integer idVideo) {
+//		videoService.dislikeVideo(idVideo, idUser);
+//		return ResponseEntity.noContent().build();
+//	}
 	
 //	@PutMapping(value="/{idUser}/videos/{idVideo}")
 //	public ResponseEntity<Void> uploadVideo(
